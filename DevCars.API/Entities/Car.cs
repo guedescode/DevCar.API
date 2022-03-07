@@ -4,11 +4,13 @@ namespace DevCars.API.Entities
 {
     public class Car
     {
-
-
-        public Car(int id, string vinCode, string brand, string model, int year, decimal price, string color, DateTime productionDate)
+        protected Car()
         {
-            Id = id;
+
+        }
+
+        public Car(string vinCode, string brand, string model, int year, decimal price, string color, DateTime productionDate)
+        {
             VinCode = vinCode;
             Brand = brand;
             Model = model;

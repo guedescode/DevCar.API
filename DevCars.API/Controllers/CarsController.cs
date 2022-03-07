@@ -29,7 +29,7 @@ namespace DevCars.API.Controllers
         }
 
         // api/cars/1
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public IActionResult GetById(int id)
         {
             var car = _dbContext.Cars.SingleOrDefault(c => c.Id == id);
@@ -57,9 +57,10 @@ namespace DevCars.API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] AddCarInputModel model)
         {
-            var car = new Car(4, model.VinCode, model.Brand, model.Model, model.Year,model.Price,model.Color,model.ProductionDate);
+            var car = new Car(model.VinCode, model.Brand, model.Model, model.Year,model.Price,model.Color,model.ProductionDate);
 
             _dbContext.Cars.Add(car);
+            _dbContext.SaveChanges();
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -69,7 +70,7 @@ namespace DevCars.API.Controllers
         }
 
         // PUT api/cars/1
-        [HttpPut("id")]
+        [HttpPut("Id")]
         public IActionResult Put(int id, [FromBody] UpdateCarInputModel model)
         {
             var car = _dbContext.Cars.SingleOrDefault(c => c.Id == id);
@@ -80,12 +81,14 @@ namespace DevCars.API.Controllers
             }
 
             car.Update(model.Color, model.Price);
+            _dbContext.SaveChanges();
+
             return NoContent();
         }
 
 
         // PUT api/cars/2
-        [HttpDelete("id")]
+        [HttpDelete("Id")]
         public IActionResult Delete(int id)
         {
             var car = _dbContext.Cars.SingleOrDefault(c => c.Id == id);
@@ -96,6 +99,7 @@ namespace DevCars.API.Controllers
             }
 
             car.SetAsSuspended();
+            _dbContext.SaveChanges();
 
             return NoContent();
         }
