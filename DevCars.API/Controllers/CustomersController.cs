@@ -1,5 +1,6 @@
 ﻿using DevCars.API.Entities;
 using DevCars.API.InputModels;
+using DevCars.API.InputModels.Order;
 using DevCars.API.Persistence;
 using DevCars.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -29,26 +30,6 @@ namespace DevCars.API.Controllers
             return Ok();
         }
 
-
-        // POST api/customers/2/orders
-        [HttpPost("{Id}/orders")]
-        public IActionResult PostOrder([FromBody] AddOrderInputModel model, int id)
-        {
-            var extraItems = model.ExtraItems.Select(e => new ExtraOrderItem(e.Description, e.Price)).ToList();
-
-            var car = _dbContext.Cars.SingleOrDefault(c => c.Id == model.IdCar);
-            var order = new Order(model.IdCar, model.IdCustomer, car.Price, extraItems);
-  
-            _dbContext.Orders.Add(order);
-            _dbContext.SaveChanges();
-
-            return CreatedAtAction(nameof(GetOrder),
-                new { id = order.IdCustomer, orderid = order.Id },
-                model
-                );
-        }
-
-
         // GET api/customers/2/orders/3
         [HttpGet("{Id}/orders/{orderid}")]
         public IActionResult GetOrder(int id, int orderid)
@@ -67,6 +48,28 @@ namespace DevCars.API.Controllers
 
             return Ok(orderViewModel);
         }
+
+        // POST api/customers/2/orders
+        [HttpPost("{Id}/orders")]
+        public IActionResult Post([FromBody] AddOrderInputModel model, int id)
+        {
+            var extraItems = model.ExtraItems.Select(e => new ExtraOrderItem(e.Description, e.Price)).ToList();
+
+            var car = _dbContext.Cars.SingleOrDefault(c => c.Id == model.IdCar);
+            var order = new Order(model.IdCar, model.IdCustomer, car.Price, extraItems);
+
+            _dbContext.Orders.Add(order);
+            _dbContext.SaveChanges();
+
+            return CreatedAtAction(nameof(GetOrder),
+                new { id = order.IdCustomer, orderid = order.Id },
+                model
+                );
+            return Ok();
+        }
+
+
+
 
         // api/customers/1
         [HttpGet("{Id}")]

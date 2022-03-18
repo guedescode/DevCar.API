@@ -23,7 +23,10 @@ namespace DevCars.API.Controllers
         {
             var cars = _dbContext.Cars;
 
-            var carsViewModel = cars.Select(c => new CarItemViewModel(c.Id, c.Brand, c.Model, c.Price)).ToList();
+            var carsViewModel = cars
+                .Where(c => c.Status == CarStatusEnum.Available)
+                .Select(c => new CarItemViewModel(c.Id, c.Brand, c.Model, c.Price))
+                .ToList();
 
             return Ok(carsViewModel);
         }
